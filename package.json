@@ -1,12 +1,13 @@
 {
   "name": "florida-hoa-puppeteer",
   "version": "1.0.0",
-  "description": "Scrapes HOA CSV from Florida DBPR",
+  "description": "A Puppeteer agent to download Florida HOA CSV",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-"dependencies": {
-  "express": "^4.18.2",
-  "puppeteer": "^22.8.2"
+  "dependencies": {
+    "express": "^4.18.2",
+    "puppeteer": "^22.8.2"
+  }
 }
