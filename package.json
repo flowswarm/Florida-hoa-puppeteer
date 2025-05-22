@@ -1,0 +1,13 @@
+{
+  "name": "florida-hoa-puppeteer",
+  "version": "1.0.0",
+  "description": "Scrapes HOA CSV from Florida DBPR",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "puppeteer": "^24.9.0"
+  }
+}
