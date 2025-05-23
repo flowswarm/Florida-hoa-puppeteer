@@ -1,5 +1,6 @@
 const express = require('express');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('chromium');
 const fs = require('fs');
 const path = require('path');
 
@@ -8,11 +9,13 @@ const PORT = process.env.PORT || 3000;
 
 app.get('/scrape', async (req, res) => {
   const browser = await puppeteer.launch({
-    headless: "new",
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    executablePath: chromium.path,
+    headless: true,
+    args: chromium.args,
   });
 
   const page = await browser.newPage();
+
   try {
     await page.goto('https://www.myfloridalicense.com/', { waitUntil: 'domcontentloaded' });
 
@@ -22,14 +25,16 @@ app.get('/scrape', async (req, res) => {
 
     // Click Instant Public Records
     await page.evaluate(() => {
-      const link = Array.from(document.querySelectorAll('a')).find(a => a.innerText.includes("Instant Public Records"));
+      const link = Array.from(document.querySelectorAll('a')).find(a =>
+        a.innerText.includes("Instant Public Records"));
       if (link) link.click();
     });
     await page.waitForNavigation();
 
     // Click Community Association Managers
     await page.evaluate(() => {
-      const link = Array.from(document.querySelectorAll('a')).find(a => a.innerText.includes("Community Association Managers"));
+      const link = Array.from(document.querySelectorAll('a')).find(a =>
+        a.innerText.includes("Community Association Managers"));
       if (link) link.click();
     });
     await page.waitForNavigation();
@@ -44,7 +49,8 @@ app.get('/scrape', async (req, res) => {
 
     // Click the CSV link
     const csvUrl = await page.evaluate(() => {
-      const link = Array.from(document.querySelectorAll('a')).find(a => a.href.endsWith('.csv'));
+      const link = Array.from(document.querySelectorAll('a')).find(a =>
+        a.href.endsWith('.csv'));
       return link ? link.href : null;
     });
 
@@ -57,11 +63,13 @@ app.get('/scrape', async (req, res) => {
     res.setHeader('Content-Disposition', 'attachment; filename="hoa_roster.csv"');
     res.setHeader('Content-Type', 'text/csv');
     return res.send(buffer);
+
   } catch (err) {
     await browser.close();
     res.status(500).send({ error: err.toString() });
   }
 });
+
 app.get('/', (req, res) => {
   res.send("Puppeteer microservice is running");
 });
