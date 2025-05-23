@@ -145,3 +145,7 @@ puppeteer-trace.json
 # Output
 /output/
 downloads/
+node_modules/
+.cache/
+.env
+*.log
